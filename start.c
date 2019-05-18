@@ -28,15 +28,40 @@ void *fg_action(int nbArgs, void **args)
 	static int ydir;
 	int s;
 	int dificulty = 10;
+	int dead_count;
 	Entity *gp;
 	Entity *gs;
 	YE_NEW(String, score_str, "score: ");
+
+	if ((dead_count = yeGetIntAt(fg, "dead_count"))) {
+		--dead_count;
+		if (dead_count % 4) {
+			char *bufs[] = {
+				"die because your DEAD!\n",
+				"moeur car tu est MORT! \n",
+				"oma e we mo SHINDE iru!\n"
+			};
+
+			ywCanvasNewTextByStr(fg, yuiRand() % (w_screen) - 50,
+					     yuiRand() % (h_screen) - 10,
+					     bufs[dead_count % 3]);
+		}
+		yeSetAt(fg, "dead_count", dead_count);
+		if (dead_count == 0) {
+			ygTerminate();
+		}
+		printf("die because your DEAD!\n");
+		printf("moeur car tu est MORT! %d\n", dead_count);
+		printf("oma e we mo SHINDE iru!\n");
+		return (void *)ACTION;
+	}
 
 	if (!g) {
 		yePushBack(fg, ywCanvasNewImgByPath(fg, w_screen / 2 - 16, 5,
 						    "./super_guy.png"), "guy");
 		g = yeGet(fg, "guy");
 	}
+
 	printf("%d\n", ygGetInt(sc_path));
 	ygIntAdd(sc_path, 11 - dificulty);
 	s = ygGetInt(sc_path);
@@ -117,8 +142,7 @@ void *fg_action(int nbArgs, void **args)
 	YE_FOREACH(r_list, r) {
 		ywCanvasMoveObjXY(r, 0, -10);
 		if (ywCanvasObjectsCheckColisions(g, r)) {
-			printf("die because your DEAD!\n");
-			ygTerminate();
+			yeCreateInt(70, fg, "dead_count");
 		}
 		if (ywCanvasObjPosY(r) < 0) {
 			ywCanvasRemoveObj(fg, r);
