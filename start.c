@@ -130,7 +130,7 @@ void *fg_action(int nbArgs, void **args)
 					   h_screen, r_info),
 			   NULL);
 	}
-	// we reget it se if we have move back because of
+	// we get 'gp' again so if we have move back because of
 	// out of screen we're still at good place
 	gp = ywCanvasObjPos(g);
 	ywCanvasObjSetPos(wind, ywPosX(gp),
