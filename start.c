@@ -20,6 +20,7 @@ void *fg_action(int nbArgs, void **args)
 	Entity *fg = args[0];
 	Entity *eves = args[1];
 	Entity *g = yeGet(fg, "guy");
+	Entity *wind = yeGet(fg, "wind");
 	Entity *r_list = yeGet(fg, "r_list");
 	int dir_change = 0;
 	int y_change = 0;
@@ -31,13 +32,21 @@ void *fg_action(int nbArgs, void **args)
 	Entity *gs;
 	YE_NEW(String, score_str, "score: ");
 
+	if (!g) {
+		yePushBack(fg, ywCanvasNewImgByPath(fg, w_screen / 2 - 16, 5,
+						    "./super_guy.png"), "guy");
+		g = yeGet(fg, "guy");
+	}
 	printf("%d\n", ygGetInt(sc_path));
-	ygIntAdd(sc_path, 1);
+	ygIntAdd(sc_path, 11 - dificulty);
 	s = ygGetInt(sc_path);
 	yeStringAddInt(score_str, s);
 	ywCanvasStringSet(yeGet(fg, "score"), score_str);
+	ywCanvasStringSet(wind, yeGet(yeGet(fg, "winds"), ywTurnId % 3));
 
-	if (s > 1000)
+	if (s > 1200)
+		dificulty = 1;
+	else if (s > 1000)
 		dificulty = 2;
 	else if (s > 900)
 		dificulty = 3;
@@ -98,11 +107,18 @@ void *fg_action(int nbArgs, void **args)
 					   h_screen, r_info),
 			   NULL);
 	}
+	// we reget it se if we have move back because of
+	// out of screen we're still at good place
+	gp = ywCanvasObjPos(g);
+	ywCanvasObjSetPos(wind, ywPosX(gp),
+			  ywPosY(gp)  -
+			  ywSizeH(ywCanvasObjSize(NULL, wind)));
 
 	YE_FOREACH(r_list, r) {
 		ywCanvasMoveObjXY(r, 0, -10);
 		if (ywCanvasObjectsCheckColisions(g, r)) {
-			printf("KABOUM !!!!\n");
+			printf("die because your DEAD!\n");
+			ygTerminate();
 		}
 		if (ywCanvasObjPosY(r) < 0) {
 			ywCanvasRemoveObj(fg, r);
@@ -126,6 +142,11 @@ void *fg_init(int nbArgs, void **args)
 		fg.action = fg_action;
 		fg.destroy = fg_kaboum;
 		fg.r_list= [];
+		fg.winds = [
+			"| |\n | \n|  ",
+			"  |\n  |\n  |",
+			"|  \n|  \n  |",
+			];
 	}
 	old_tl = ywTurnLengthOverwrite;
 	ywTurnLengthOverwrite = 70000;
@@ -134,14 +155,10 @@ void *fg_init(int nbArgs, void **args)
 	void *ret = ywidNewWidget(fg, "canvas");
 
 	printf("%s%s\n", m_path, "super_guy.png");
-		   /* ywCanvasNewTextByStr(fg, w_screen / 2 - 20, 5, */
-		   /* 			    " o \n" */
-		   /* 			    "/|\\\n" */
-		   /* 			    "/ \\"), */
-		   /* "guy"); */
+	yePushBack(fg, ywCanvasNewText(fg, 100, 10,
+				       yeGet(yeGet(fg, "winds"), 0)),
+		   "wind");
 	yePushBack(fg, ywCanvasNewTextByStr(fg, 0, 10, ""), "score");
-	yePushBack(fg, ywCanvasNewImgByPath(fg, w_screen / 2 - 16, 5,
-					    "./super_guy.png"), "guy");
 	ygReCreateInt(sc_path, 0);
 	return ret;
 }
