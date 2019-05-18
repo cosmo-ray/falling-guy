@@ -35,24 +35,22 @@ void *fg_action(int nbArgs, void **args)
 
 	if ((dead_count = yeGetIntAt(fg, "dead_count"))) {
 		--dead_count;
-		if (dead_count % 4) {
+		if (!(dead_count % 4)) {
 			char *bufs[] = {
 				"die because your DEAD!\n",
 				"moeur car tu est MORT! \n",
 				"oma e we mo SHINDE iru!\n"
 			};
+			int bl = sizeof(bufs) / sizeof(*bufs);
 
 			ywCanvasNewTextByStr(fg, yuiRand() % (w_screen) - 50,
 					     yuiRand() % (h_screen) - 10,
-					     bufs[dead_count % 3]);
+					     bufs[dead_count % bl]);
 		}
 		yeSetAt(fg, "dead_count", dead_count);
 		if (dead_count == 0) {
 			ygTerminate();
 		}
-		printf("die because your DEAD!\n");
-		printf("moeur car tu est MORT! %d\n", dead_count);
-		printf("oma e we mo SHINDE iru!\n");
 		return (void *)ACTION;
 	}
 
