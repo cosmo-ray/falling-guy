@@ -60,15 +60,15 @@ void *fg_action(int nbArgs, void **args)
 						    "./super_guy.png"), "guy");
 		g = yeGet(fg, "guy");
 	}
-	if (ywTurnLengthOverwrite > 40000)
-		ywTurnLengthOverwrite -= 100;
+	if (ywGetTurnLengthOverwrite() > 40000)
+		ywSetTurnLengthOverwrite(ywGetTurnLengthOverwrite() - 100);
 
 	printf("%d\n", ygGetInt(sc_path));
 	ygIntAdd(sc_path, 11 - dificulty);
 	s = ygGetInt(sc_path);
 	yeStringAddInt(score_str, s);
 	ywCanvasStringSet(yeGet(fg, "score"), score_str);
-	ywCanvasStringSet(wind, yeGet(yeGet(fg, "winds"), ywTurnId % 3));
+	ywCanvasStringSet(wind, yeGet(yeGet(fg, "winds"), ywTurnId() % 3));
 
 	if (s > 1200)
 		dificulty = 1;
@@ -155,7 +155,7 @@ void *fg_action(int nbArgs, void **args)
 
 void *fg_kaboum(int nbArgs, void **args)
 {
-	ywTurnLengthOverwrite = old_tl;
+	ywSetTurnLengthOverwrite(old_tl);
 }
 
 void *fg_init(int nbArgs, void **args)
@@ -173,8 +173,8 @@ void *fg_init(int nbArgs, void **args)
 			"|  \n|  \n  |",
 			];
 	}
-	old_tl = ywTurnLengthOverwrite;
-	ywTurnLengthOverwrite = 70000;
+	old_tl = ywGetTurnLengthOverwrite();
+	ywSetTurnLengthOverwrite(70000);
 
 	printf("new fg wid\n");
 	void *ret = ywidNewWidget(fg, "canvas");
