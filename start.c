@@ -55,11 +55,6 @@ void *fg_action(int nbArgs, void **args)
 		return (void *)ACTION;
 	}
 
-	if (!g) {
-		yePushBack(fg, ywCanvasNewImgByPath(fg, w_screen / 2 - 16, 5,
-						    "./super_guy.png"), "guy");
-		g = yeGet(fg, "guy");
-	}
 	if (ywGetTurnLengthOverwrite() > 40000)
 		ywSetTurnLengthOverwrite(ywGetTurnLengthOverwrite() - 100);
 
@@ -183,6 +178,8 @@ void *fg_init(int nbArgs, void **args)
 	yePushBack(fg, ywCanvasNewText(fg, 100, 10,
 				       yeGet(yeGet(fg, "winds"), 0)),
 		   "wind");
+	yePushBack(fg, ywCanvasNewImgByPath(fg, w_screen / 2 - 16, 5,
+					    "./super_guy.png"), "guy");
 	yePushBack(fg, ywCanvasNewTextByStr(fg, 0, 10, ""), "score");
 	ygReCreateInt(sc_path, 0);
 	return ret;
