@@ -50,7 +50,11 @@ void *fg_action(int nbArgs, void **args)
 		}
 		yeSetAt(fg, "dead_count", dead_count);
 		if (dead_count == 0) {
-			ygTerminate();
+			Entity *die_action = yeGet(fg, "die");
+			if (die_action)
+				yesCall(die_action, fg);
+			else
+				ygTerminate();
 		}
 		return (void *)ACTION;
 	}
@@ -173,13 +177,15 @@ void *fg_init(int nbArgs, void **args)
 
 	printf("new fg wid\n");
 	void *ret = ywidNewWidget(fg, "canvas");
+	YE_NEW(String, img_path, m_path);
 
+	yeAdd(img_path, "super_guy.png");
 	printf("%s%s\n", m_path, "super_guy.png");
 	yePushBack(fg, ywCanvasNewText(fg, 100, 10,
 				       yeGet(yeGet(fg, "winds"), 0)),
 		   "wind");
 	yePushBack(fg, ywCanvasNewImgByPath(fg, w_screen / 2 - 16, 5,
-					    "./super_guy.png"), "guy");
+					    yeGetString(img_path)), "guy");
 	yePushBack(fg, ywCanvasNewTextByStr(fg, 0, 10, ""), "score");
 	ygReCreateInt(sc_path, 0);
 	return ret;
