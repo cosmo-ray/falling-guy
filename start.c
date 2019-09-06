@@ -34,7 +34,7 @@ void *fg_action(int nbArgs, void **args)
 	YE_NEW(String, score_str, "score: ");
 
 	if ((dead_count = yeGetIntAt(fg, "dead_count"))) {
-		ywTurnLengthOverwrite = 70000;
+		ywSetTurnLengthOverwrite(70000);
 		--dead_count;
 		if (!(dead_count % 4)) {
 			char *bufs[] = {
@@ -62,7 +62,6 @@ void *fg_action(int nbArgs, void **args)
 	if (ywGetTurnLengthOverwrite() > 40000)
 		ywSetTurnLengthOverwrite(ywGetTurnLengthOverwrite() - 100);
 
-	printf("%d\n", ygGetInt(sc_path));
 	ygIntAdd(sc_path, 11 - dificulty);
 	s = ygGetInt(sc_path);
 	yeStringAddInt(score_str, s);
