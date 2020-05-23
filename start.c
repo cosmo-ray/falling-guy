@@ -89,21 +89,13 @@ void *fg_action(int nbArgs, void **args)
 
 	if (yevIsKeyDown(eves, Y_LEFT_KEY)) {
 		xdir = -1;
-		if (xdir > -1)
-			dir_change = 1;
 	} else if (yevIsKeyDown(eves, Y_RIGHT_KEY)) {
 		xdir = 1;
-		if (xdir < 1)
-			dir_change = 1;
 	}
 	if (yevIsKeyDown(eves, Y_DOWN_KEY)) {
 		ydir = 10;
-		if (ydir < 1)
-			y_change = 1;
 	} else if (yevIsKeyDown(eves, Y_UP_KEY)) {
 		ydir = -3;
-		if (ydir > -1)
-			y_change = 1;
 	}
 
 	if (!dir_change &&
