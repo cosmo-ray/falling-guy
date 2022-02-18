@@ -156,6 +156,9 @@ void *fg_init(int nbArgs, void **args)
 		fg.background = "rgba: 255 255 255 255";
 		fg.action = fg_action;
 		fg.destroy = fg_kaboum;
+		fg.margin = [];
+		fg.nargin.size = 3;
+		fg.nargin.color = "rgba: 0 0 0 255";
 		fg.r_list= [];
 		fg.winds = [
 			"| |\n | \n|  ",
@@ -168,10 +171,11 @@ void *fg_init(int nbArgs, void **args)
 
 	printf("new fg wid\n");
 	void *ret = ywidNewWidget(fg, "canvas");
+	w_screen = ywRectW(yeGet(fg, "wid-pix"));
+	h_screen = ywRectH(yeGet(fg, "wid-pix"));
 	YE_NEW(String, img_path, m_path);
 
-	yeAdd(img_path, "super_guy.png");
-	printf("%s%s\n", m_path, "super_guy.png");
+	yeAdd(img_path, "/super_guy.png");
 	yePushBack(fg, ywCanvasNewText(fg, 100, 10,
 				       yeGet(yeGet(fg, "winds"), 0)),
 		   "wind");
@@ -179,6 +183,7 @@ void *fg_init(int nbArgs, void **args)
 					    yeGetString(img_path)), "guy");
 	yePushBack(fg, ywCanvasNewTextByStr(fg, 0, 10, ""), "score");
 	ygReCreateInt(sc_path, 0);
+
 	return ret;
 }
 
