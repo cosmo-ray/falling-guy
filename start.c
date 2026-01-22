@@ -130,6 +130,7 @@ void *fg_action(int nbArgs, void **args)
 			  ywPosY(gp)  -
 			  ywSizeH(ywCanvasObjSize(NULL, wind)));
 
+	Entity *r;
 	YE_FOREACH(r_list, r) {
 		ywCanvasMoveObjXY(r, 0, -10);
 		if (ywCanvasObjectsCheckColisions(g, r)) {
